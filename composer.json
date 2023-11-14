@@ -3,8 +3,7 @@
     "description": "An HttpCache extension with redis for Symfony 5",
     "require": {
         "php": ">=7.3",
-        "predis/predis": "1.0.*",
-        "symfony/framework-bundle": "^5.4"
+        "predis/predis": "1.0.*"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.4",
