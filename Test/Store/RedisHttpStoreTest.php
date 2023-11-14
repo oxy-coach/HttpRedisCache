@@ -9,20 +9,28 @@
 namespace Solilokiam\HttpRedisCache\Test\Store;
 
 
+use PHPUnit\Framework\TestCase;
 use Solilokiam\HttpRedisCache\RedisClient\Client;
 use Solilokiam\HttpRedisCache\Store\RedisHttpStore;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RedisHttpStoreTest extends \PHPUnit_Framework_TestCase
+class RedisHttpStoreTest extends TestCase
 {
     protected $store;
     protected $request;
     protected $response;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->store = new RedisHttpStore(array('host' => 'localhost'), 'hdr', 'ldr', 'mdr');
+        $this->store = new RedisHttpStore(
+            [
+                'host' => 'redis',
+            ],
+            'hdr',
+            'ldr',
+            'mdr'
+        );
 
         $this->request = Request::create('/');
 
@@ -35,17 +43,16 @@ class RedisHttpStoreTest extends \PHPUnit_Framework_TestCase
     {
         $this->store = null;
         $this->request = null;
-        $this->request = null;
 
         $this->cleanKeys();
     }
 
-    public function testReadsEmptyCacheAtKey()
+    public function testReadsEmptyCacheAtKey(): void
     {
         $this->assertEmpty($this->getStoreMetadata('/nothing'));
     }
 
-    public function testUnlockThatExists()
+    public function testUnlockThatExists(): void
     {
         $this->storeSimpleEntry();
         $this->store->lock($this->request);
@@ -53,12 +60,12 @@ class RedisHttpStoreTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->store->unlock($this->request));
     }
 
-    public function testUnlockThatDoesNotExist()
+    public function testUnlockThatDoesNotExist(): void
     {
         $this->assertFalse($this->store->unlock($this->request));
     }
 
-    public function testRemoveEntriesForKeyWithPurge()
+    public function testRemoveEntriesForKeyWithPurge(): void
     {
         $request = Request::create('/foorequest');
         $this->store->write($request, new Response('fooresponse'));
@@ -75,16 +82,16 @@ class RedisHttpStoreTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->store->purge('/bar'));
     }
 
-    public function testStoresACacheEntry()
+    public function testStoresACacheEntry(): void
     {
         $cacheKey = $this->storeSimpleEntry();
 
         $this->assertNotEmpty($this->getStoreMetadata($cacheKey));
     }
 
-    protected function cleanKeys()
+    protected function cleanKeys(): void
     {
-        $client = new Client(array('host' => 'localhost'));
+        $client = new Client(['host' => 'localhost']);
 
         $client->createConnection();
         $client->flushAll();
@@ -125,6 +132,4 @@ class RedisHttpStoreTest extends \PHPUnit_Framework_TestCase
 
         return $m->invoke($this->store, $key);
     }
-
-
 }

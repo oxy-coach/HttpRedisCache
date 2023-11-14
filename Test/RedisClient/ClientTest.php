@@ -9,29 +9,30 @@
 namespace Solilokiam\HttpRedisCache\Test\RedisClient;
 
 
+use PHPUnit\Framework\TestCase;
 use Solilokiam\HttpRedisCache\RedisClient\Client;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends TestCase
 {
     protected $redisMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->redisMock = $this->getMock('\Redis');
+        $this->redisMock = $this->createMock(\Redis::class);
     }
 
-    public function testSimpleConnect()
+    public function testSimpleConnect(): void
     {
-        $client = new Client(array('host' => 'localhost'));
+        $client = new Client(['host' => 'localhost']);
 
         $return = $client->createConnection();
 
         $this->assertTrue($return);
     }
 
-    public function testReadWriteKey()
+    public function testReadWriteKey(): void
     {
-        $client = new Client(array('host' => 'localhost'));
+        $client = new Client(['host' => 'localhost']);
 
         $connection = $client->createConnection();
 
@@ -46,9 +47,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client->del('testkey');
     }
 
-    public function testDelKey()
+    public function testDelKey(): void
     {
-        $client = new Client(array('host' => 'localhost'));
+        $client = new Client(['host' => 'localhost']);
 
         $connection = $client->createConnection();
 
@@ -64,9 +65,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testHashGet()
+    public function testHashGet(): void
     {
-        $client = new Client(array('host' => 'localhost'));
+        $client = new Client(['host' => 'localhost']);
 
         $connection = $client->createConnection();
 
