@@ -2,7 +2,7 @@
     "name": "solilokiam/httprediscache",
     "description": "An HttpCache extension with redis for Symfony 5",
     "require": {
-        "php": ">=7.3",
+        "php": ">=8.0",
         "predis/predis": "1.0.*"
     },
     "require-dev": {
